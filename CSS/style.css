@@ -1,0 +1,268 @@
+:root {
+  --background-color: #f0f0f0;
+  --text-color: #000;
+  --text-color-inversed: #fff;
+  --text-days: #898989;
+  --text-days-future: #c2c2c2;
+  --container-bg-color: #fff;
+  --button-bg-color: #f0f0f0;
+  --button-hover-bg-color: #e0e0e0;
+}
+
+[data-theme="dark"] {
+  --background-color: #333;
+  --text-color: #fff;
+  --text-color-inversed: #444;
+  --text-days: #c2c2c2;
+  --text-days-future: #8a8a8a;
+  --container-bg-color: #444;
+  --button-bg-color: #777;
+  --calendar-bg-color: #333;
+  --button-hover-bg-color: #666;
+  --input-bg-color: #555;
+  --input-text-color: #fff; 
+  --input-border-color: #666; 
+}
+
+[data-theme="dark"] .logo img {
+  filter: invert(100%);
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.github-logo {
+  fill: var(--container-bg-color); 
+  color: var(--text-color); 
+  position: absolute; 
+  top: 0; 
+  border: 0; 
+  right: 0; 
+}
+
+.appContainer {
+  background-color: var(--container-bg-color);
+  padding: 1.875em; 
+  border-radius: 2.5em; 
+  box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  width: auto; 
+}
+
+.profileContainer {
+  background-color: var(--background-color);
+  border-radius: 1.875em;
+  padding: 1.80em;
+  margin-bottom: 2.25em;
+  margin-top: 2.25em;
+  box-shadow: 0 0.125em 0.225em rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 35rem;
+}
+
+.copyButton {
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0.375em;
+  padding: 0.3125em 0.625em;
+  margin-top: 0.75em;
+  cursor: pointer;
+  box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
+  font-family: 'Lexend', sans-serif;
+}
+
+.copyButton:hover {
+  background-color: var(--button-hover-bg-color);
+  color: var(--text-color);
+}
+
+.shareButton {
+  background-color: var(--button-bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0.5em;
+  padding: 0.625em 1.25em;
+  margin-top: 1.25em;
+  cursor: pointer;
+  box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
+  font-family: 'Lexend', sans-serif;
+  margin-bottom: 1.875em;
+  font-size: 1em;
+}
+
+.shareButton:hover {
+  background-color: var(--button-hover-bg-color);
+  color: var(--text-color);
+}
+
+.description {
+  font-size: 1em;
+  text-align: center;
+  margin: 0;
+  padding: 0.375em;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 7em;
+} 
+
+.logo img {
+  filter: none; 
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 2.5em;
+  height: 1.5em;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color);
+  transition: 0.4s;
+  border-radius: 1.5em;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.125em;
+  width: 1.125em;
+  left: 0.1875em;
+  bottom: 0.1875em;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--background-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(1em);
+}
+
+@media (max-width: 48em) {
+  #appContainer {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    width: auto;
+  }
+  body {
+    background-color: var(--container-bg-color);
+  }
+  .github-logo {
+    fill: var(--background-color);
+    color: var(--text-color); 
+    position: absolute; 
+    top: 0; 
+    border: 0; 
+    right: 0;
+  }
+  #countdownContainer {
+    text-align: center;
+    font-size: 1em;
+  }
+}
+
+#countdownContainer {
+  padding: 0.625em;
+  margin-top: 0.625em;
+  text-align: center;
+  font-size: 1em;
+}
+
+.profileContainer {
+  background-color: var(--background-color);
+  border-radius: 1.875em;
+  padding: 1.60em;
+  margin-bottom: 2.75em;
+  margin-top: 1.25em;
+  box-shadow: 0 0.125em 0.225em rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 35rem;
+}
+
+.profileDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+}
+
+#profilePicture {
+  width: 3.25em;
+  height: 3.25em;
+  border-radius: 20%;
+  margin-right: 0.625em;
+}
+
+#logoPicture {
+  margin-left: 0.625em;
+  max-width: 6.25em;
+  max-height: 3em;
+}
+
+.briefContent p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  padding-top: 10px;
+}
+
+#profileName {
+  margin-bottom: 0.25em;
+}
+
+#profileEmail {
+  margin-top: 0;
+}
+
+.black-fill {
+  filter: grayscale(100%);
+}
+  
