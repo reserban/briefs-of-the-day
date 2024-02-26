@@ -41,31 +41,6 @@ function generateBriefForToday(dateString) {
     const seed = generateSeed(dateString); // Use the same seed for consistency
     const selectedDate = new Date(dateString); // Define selectedDate at the start
 
-    // Define sample data for brief generation
-    const companyDescriptions = [
-        "We are a company that produces innovative solutions for everyday problems. Our team is dedicated to creating products that blend seamlessly into your life. Our flagship product is a cutting-edge device designed to simplify your daily routines.",
-        "We are a company committed to revolutionizing the way people interact with technology. With a focus on user-friendly design and advanced functionality, our main product enhances convenience and efficiency in your home.",
-        "We are a company passionate about protecting what matters most to you. Our team combines expertise and warmth to provide you with reliable solutions. Our signature product is a state-of-the-art device that ensures peace of mind for your family."
-    ];
-
-    const productDescriptions = [
-        "Our main product is a device that utilizes groundbreaking technology to protect your property. Its sleek design and advanced features make it a must-have for any modern home.",
-        "Our flagship product is a revolutionary device that combines functionality with elegance. Designed to enhance your security and comfort, it represents the future of home protection.",
-        "Our primary offering is a state-of-the-art device that integrates seamlessly into your daily life. With its user-friendly interface and advanced capabilities, it sets a new standard for home security."
-    ];
-
-    const targetAudiences = [
-        "college students",
-        "families",
-        "young professionals"
-    ];
-
-    const clientPreferences = {
-        materials: "biodegradable",
-        designStyle: "vintage",
-        brandColor: "black"
-    };
-
     // Function to select a random element from an array
     function getRandomElement(array) {
         return array[Math.floor(pseudoRandom(seed) * array.length)];
@@ -76,7 +51,7 @@ function generateBriefForToday(dateString) {
     const productDescription = getRandomElement(productDescriptions);
     const targetAudience = getRandomElement(targetAudiences);
 
-    const brief = `${companyDescription}\n\n${productDescription}\n\nOur target audience is ${targetAudience}. We aim to convey a sense of comfort and liveliness.\n\nPackaging Details:\n- Materials: ${clientPreferences.materials}\n- Design Style: ${clientPreferences.designStyle}\n- Brand Color: ${clientPreferences.brandColor}`;
+    const brief = `${companyDescription}\n\n${productDescription}\n\n <br><br> Our target audience is ${targetAudience}. We aim to convey a sense of comfort and liveliness.\n\nPackaging Details:\n- Materials: ${clientPreferences.materials}\n- Design Style: ${clientPreferences.designStyle}\n- Brand Color: ${clientPreferences.brandColor}`;
 
     document.getElementById('brief').innerHTML = brief;
     updateProfilePicture(dateString); // Update profile picture based on the date
@@ -177,10 +152,12 @@ function generateNameFromDate(dateString) {
   }
   
   function updateProfileName(dateString) {
-    const nameElement = document.getElementById('profileName');
+    const nameElements = document.querySelectorAll('.profileName'); // Select all elements with class 'profileName'
     const generatedName = generateNameFromDate(dateString);
-    nameElement.textContent = generatedName; // Update the content of the name element with the generated name
-  }
+    nameElements.forEach(element => {
+        element.textContent = generatedName; // Update the content of each element with the generated name
+    });
+}
 
   function generateMailEnding(seed) {
     return mailEnding[Math.floor(pseudoRandom(seed) * mailEnding.length)];
@@ -206,7 +183,7 @@ function generateNameFromDate(dateString) {
       logoFileName = logoFileName.replace(/[\s-]/g, '').toLowerCase();
   
       // Combine the selected first and last names into an email format, now including logoFileName
-      const email = firstNames[firstNameIndex].toLowerCase() + "." + lastNames[lastNameIndex].toLowerCase() + "@not" + logoFileName; // Assuming .com domain for simplicity
+      const email = firstNames[firstNameIndex].toLowerCase() + "." + lastNames[lastNameIndex].toLowerCase() + "@not" + logoFileName + ".com"; // Assuming .com domain for simplicity
     
       // Return the generated email
       return email;
@@ -214,10 +191,12 @@ function generateNameFromDate(dateString) {
   
   
   function updateProfileEmail(dateString) {
-      const emailElement = document.getElementById('profileEmail'); // Assuming there's an element with id 'profileEmail' to display the email
-      const generatedEmail = generateEmailFromDate(dateString);
-      emailElement.textContent = generatedEmail; // Update the content of the email element with the generated email
-    }
+    const emailElements = document.querySelectorAll('.profileEmail'); // Select all elements with class 'profileEmail'
+    const generatedEmail = generateEmailFromDate(dateString);
+    emailElements.forEach(element => {
+        element.textContent = generatedEmail; // Update the content of each element with the generated email
+    });
+}
   
     function generateCompanyNameFromDate(dateString) {
       const seed = generateSeed(dateString); // Reuse the existing generateSeed function for a consistent seed

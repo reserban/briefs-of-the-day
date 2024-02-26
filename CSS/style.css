@@ -63,9 +63,10 @@ body {
 .profileContainer {
   background-color: var(--background-color);
   border-radius: 1.875em;
-  padding: 1.80em;
+  padding-top: 0.60em !important;
+  padding: 1.40em;
   margin-bottom: 2.25em;
-  margin-top: 2.25em;
+  margin-top: 1em;
   box-shadow: 0 0.125em 0.225em rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -205,20 +206,10 @@ input:checked + .slider:before {
   margin-top: 0.625em;
   text-align: center;
   font-size: 1em;
+  min-height: 3em;
 }
 
-.profileContainer {
-  background-color: var(--background-color);
-  border-radius: 1.875em;
-  padding: 1.60em;
-  margin-bottom: 2.75em;
-  margin-top: 1.25em;
-  box-shadow: 0 0.125em 0.225em rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 35rem;
-}
+
 
 .profileDetails {
   display: flex;
@@ -254,11 +245,11 @@ input:checked + .slider:before {
   padding-top: 10px;
 }
 
-#profileName {
+.profileName {
   margin-bottom: 0.25em;
 }
 
-#profileEmail {
+.profileEmail {
   margin-top: 0;
 }
 

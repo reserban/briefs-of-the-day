@@ -1,3 +1,29 @@
+    // Define sample data for brief generation
+    const companyDescriptions = [
+      "We are a company that produces innovative solutions for everyday problems. Our team is dedicated to creating products that blend seamlessly into your life. Our flagship product is a cutting-edge device designed to simplify your daily routines.",
+      "We are a company committed to revolutionizing the way people interact with technology. With a focus on user-friendly design and advanced functionality, our main product enhances convenience and efficiency in your home.",
+      "We are a company passionate about protecting what matters most to you. Our team combines expertise and warmth to provide you with reliable solutions. Our signature product is a state-of-the-art device that ensures peace of mind for your family."
+  ];
+
+  const productDescriptions = [
+      "Our main product is a device that utilizes groundbreaking technology to protect your property. Its sleek design and advanced features make it a must-have for any modern home.",
+      "Our flagship product is a revolutionary device that combines functionality with elegance. Designed to enhance your security and comfort, it represents the future of home protection.",
+      "Our primary offering is a state-of-the-art device that integrates seamlessly into your daily life. With its user-friendly interface and advanced capabilities, it sets a new standard for home security."
+  ];
+
+  const targetAudiences = [
+      "college students",
+      "families",
+      "young professionals"
+  ];
+
+  const clientPreferences = {
+      materials: "biodegradable",
+      designStyle: "vintage",
+      brandColor: "black"
+  };
+
+
 const firstNames = [
 "Addison",
 "Adrian",
@@ -1700,7 +1726,6 @@ const newLogoFilenames = [
   "1121 slides.svg",
   "1122 slim.svg",
   "1123 smartling.svg",
-  "1124 smashingmagazine.svg",
   "1125 snap-svg.svg",
   "1126 snaplet.svg",
   "1127 snowflake.svg",
@@ -1995,4 +2020,15 @@ const mailEnding = [
   "With gratitude",
   "Respectfully",
   "Faithfully",
+  "Warmest regards",
+  "Kind regards",
+  "With appreciation",
+  "Yours truly",
+  "Best wishes",
+  "With respect",
+  "Thankfully",
+  "All the best",
+  "Cordially",
+  "Thank you",
+  "Have a nice day",
 ];
