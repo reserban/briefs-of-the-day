@@ -66,7 +66,7 @@ function generateBriefForToday(dateString) {
 
 function updateProfilePicture(dateString) {
     const seed = generateSeed(dateString) + 5; // Use a different base seed for variety
-    const pictureIndex = Math.floor(pseudoRandom(seed) * 2444) + 1;
+    const pictureIndex = Math.floor(pseudoRandom(seed) * 300) + 1;
     const imageFileName = `Images/Persons/${pictureIndex}p.jpg`;
 
     const imgElement = document.getElementById('profilePicture');
