@@ -13,7 +13,6 @@
     <script src="JS/script.js"></script>
     <script src="JS/db.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 </head>
 <body>
     <div class="github-light">
@@ -30,16 +29,16 @@
                     <span class="slider round"></span>
                 </label>
                 <div class="title"><h2>Briefs of the Day</h2></div>
-                <p class="description">Get a new design challenge every day.<br>Tag <b>#upforbriefs</b> in your Instagram post.</p>
+                <p class="description">Challenge! Use today's colors in your design. <br>Tag #upforbriefs on <a
+                  href="https://www.reddit.com/r/designcrony/">Reddit</a>, <a
+                  href="https://discord.gg/AHDfnppM2N">Discord.</a></p>
                 <input type="text" id="datePicker" readonly>
-    
                 <div class="profileContainer">
                     <div class="profileDetails">
                       <div class="leftSection">
                         <img id="profilePicture" src="" alt="Profile Picture">
                         <div class="profileData">
                           <p class="profileName"></p>
-                          <p hidden id="companyName"></p> 
                           <p class="profileEmail"></p>  
                         </div>
                       </div>
@@ -47,14 +46,23 @@
                     </div>
                     <br>
                     <div class="briefContent">
-                      <b><p id="briefTitle">Brief Title</p></b>
+                      <p class="productNames"></p> - <p id="briefTitle"></p>
                       <br><br>
-                      <p id="brief"></p>
-                      <div class="profileData"></div>
-                      <br>
-                      <p id="mailEndingParagraph"></p>, <p class="profileName"></p>
+                        <p id="briefIntro"></p> <p class="companyName"></p> <p id="briefContext"></p>, <p class="productNames"></p>. <p id="briefAreas"></p> <p class="productAreas"></p> <p id="briefRelations"></p> <p class="companyName"></p>.
+                        <br><br>
+                        <p id="briefChallenges"></p> <p class="productNames"></p> <p id="briefStyles"></p> <p class="productAreas"></p>.
+                        <p id="briefUsages"></p> <p id="briefFreedoms"></p> <p class="productNames"></p>.
+                        <br><br>
+                        <p id="briefAttached"></p>.
+                        <p id="briefDeadline"></p>
+                      <br><br>
+                      <p id="briefEnding"></p>, <p class="profileName"></p>
                       </div>
                     </div>
+                    <div class="buttonContainer">
+                    <button class="shareButton" onclick="copyBriefContent()">Copy Brief</button> 
+                    <button class="shareButton" id="downloadSvgButton">Download Assets</button> 
+                  </div> 
                   </div>
                 </div>
         <div id="countdownContainer">

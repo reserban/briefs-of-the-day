@@ -3,20 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeThemeSwitcher();
     startCountdown();
     const today = new Date();
-    // Format the date to 'YYYY-MM-DD' in the local time zone
     const dateString = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-    generateBriefForToday(dateString); // Generate a brief and update profile picture for today
+    generateBriefForToday(dateString);
 });
+
 function initializeFlatpickr() {
     flatpickr("#datePicker", {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        defaultDate: new Date(), // Sets today's date as default
-        maxDate: new Date(), // Prevents selection of future dates
-        disableMobile: true, // Disables the mobile-friendly version
+        defaultDate: new Date(), 
+        maxDate: new Date(), 
+        disableMobile: true, 
         onChange: function(selectedDates, dateStr, instance) {
-            generateBriefForToday(dateStr); // Pass the selected date as a string
+            generateBriefForToday(dateStr); 
         }
     });
     document.querySelector("#datePicker").setAttribute("autocomplete", "nope");
@@ -27,7 +27,7 @@ function generateSeed(date) {
     for (var i = 0; i < date.length; i++) {
         var char = date.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32bit integer
+        hash = hash & hash; 
     }
     return hash;
 }
@@ -35,56 +35,6 @@ function generateSeed(date) {
 function pseudoRandom(seed) {
     var x = Math.sin(seed++) * 10000;
     return x - Math.floor(x);
-}
-
-function generateBriefForToday(dateString) {
-    const seed = generateSeed(dateString); // Use the same seed for consistency
-    const selectedDate = new Date(dateString); // Define selectedDate at the start
-
-    // Function to select a random element from an array
-    function getRandomElement(array) {
-        return array[Math.floor(pseudoRandom(seed) * array.length)];
-    }
-
-    // Generate a brief
-    const companyDescription = getRandomElement(companyDescriptions);
-    const productDescription = getRandomElement(productDescriptions);
-    const targetAudience = getRandomElement(targetAudiences);
-
-    const brief = `${companyDescription}\n\n${productDescription}\n\n <br><br> Our target audience is ${targetAudience}. We aim to convey a sense of comfort and liveliness.\n\nPackaging Details:\n- Materials: ${clientPreferences.materials}\n- Design Style: ${clientPreferences.designStyle}\n- Brand Color: ${clientPreferences.brandColor}`;
-
-    document.getElementById('brief').innerHTML = brief;
-    updateProfilePicture(dateString); // Update profile picture based on the date
-    updateProfileName(dateString); 
-    updateProfileEmail(dateString); 
-    updateCompanyName(dateString); 
-    updateLogoPicture(dateString); // Update logo picture based on the date
-    adjustCountdownVisibility(selectedDate);
-    const mailEndingParagraph = document.getElementById('mailEndingParagraph');
-    mailEndingParagraph.textContent = generateMailEnding(seed);
-}
-
-function updateProfilePicture(dateString) {
-    const seed = generateSeed(dateString) + 5; // Use a different base seed for variety
-    const pictureIndex = Math.floor(pseudoRandom(seed) * 300) + 1;
-    const imageFileName = `Images/Persons/${pictureIndex}p.jpg`;
-
-    const imgElement = document.getElementById('profilePicture');
-    imgElement.src = imageFileName;
-}
-
-
-function adjustCountdownVisibility(selectedDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Normalize today's date for comparison
-    selectedDate.setHours(0, 0, 0, 0); // Normalize selected date for comparison
-
-    const isToday = today.getTime() === selectedDate.getTime();
-
-    const countdownElement = document.getElementById('countdown');
-    countdownElement.style.visibility = isToday ? 'visible' : 'hidden';
-    countdownElement.style.opacity = isToday ? '1' : '0';
-    countdownElement.style.pointerEvents = isToday ? 'auto' : 'none';
 }
 
 function initializeThemeSwitcher() {
@@ -102,6 +52,18 @@ function initializeThemeSwitcher() {
     });
 }
 
+function adjustCountdownVisibility(selectedDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    selectedDate.setHours(0, 0, 0, 0); 
+    const isToday = today.getTime() === selectedDate.getTime();
+
+    const countdownElement = document.getElementById('countdown');
+    countdownElement.style.visibility = isToday ? 'visible' : 'hidden';
+    countdownElement.style.opacity = isToday ? '1' : '0';
+    countdownElement.style.pointerEvents = isToday ? 'auto' : 'none';
+}
+
 function startCountdown() {
     function updateCountdown() {
         const now = new Date();
@@ -115,17 +77,17 @@ function startCountdown() {
         document.getElementById('countdown').textContent = `Time left: ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    updateCountdown(); // Initialize countdown immediately
-    setInterval(updateCountdown, 1000); // Update countdown every second
+    updateCountdown(); 
+    setInterval(updateCountdown, 1000); 
 }
 
-function updateLogoPicture(dateString) {
-    // Generate a logo index based on a pseudo-random seed
-    const logoIndex = getLogoIndexFromDate(dateString);
-    const fullLogoFileName = newLogoFilenames[logoIndex];
+function updateProfilePicture(dateString) {
+    const seed = generateSeed(dateString) + 5; 
+    const pictureIndex = Math.floor(pseudoRandom(seed) * 300) + 1;
+    const imageFileName = `Images/Persons/${pictureIndex}p.jpg`;
 
-    // Update the logo image source
-    updateLogoImageSource(fullLogoFileName);
+    const imgElement = document.getElementById('profilePicture');
+    imgElement.src = imageFileName;
 }
 
 function getLogoIndexFromDate(dateString) {
@@ -136,18 +98,24 @@ function getLogoIndexFromDate(dateString) {
 function updateLogoImageSource(fullLogoFileName) {
     const logoElement = document.getElementById('logoPicture');
     logoElement.src = `Images/Logos/${fullLogoFileName}`;
+    logoElement.classList.add("black-fill");
+}
+
+function updateLogoPicture(dateString) {
+    const logoIndex = getLogoIndexFromDate(dateString);
+    const fullLogoFileName = newLogoFilenames[logoIndex];
+
+    updateLogoImageSource(fullLogoFileName);
 }
 
 function generateNameFromDate(dateString) {
-    const seed = generateSeed(dateString); // Reuse existing generateSeed function to get a consistent seed from dateString
+    const seed = generateSeed(dateString); 
   
     const firstNameIndex = Math.floor(pseudoRandom(seed) * firstNames.length);
     const lastNameIndex = Math.floor(pseudoRandom(seed + 1) * lastNames.length);
   
-    // Combine the selected first and last names into a full name
     const fullName = firstNames[firstNameIndex] + " " + lastNames[lastNameIndex];
   
-    // Return the generated name
     return fullName;
   }
   
@@ -159,78 +127,237 @@ function generateNameFromDate(dateString) {
     });
 }
 
-  function generateMailEnding(seed) {
-    return mailEnding[Math.floor(pseudoRandom(seed) * mailEnding.length)];
+function generateEmailFromDate(dateString) {
+    const seed = generateSeed(dateString); 
+  
+    const firstNameIndex = Math.floor(pseudoRandom(seed) * firstNames.length);
+    const lastNameIndex = Math.floor(pseudoRandom(seed + 1) * lastNames.length);
+  
+    // Generate logoIndex for logoFileName
+    const logoSeed = seed + 10; 
+    const logoIndex = Math.floor(pseudoRandom(logoSeed) * newLogoFilenames.length);
+    const fullLogoFileName = newLogoFilenames[logoIndex];
+    
+    const logoFileNameWithExtension = fullLogoFileName.split('.').slice(0, -1).join('.'); // Remove the extension more reliably
+    let logoFileName = logoFileNameWithExtension.includes(' ') ? logoFileNameWithExtension.split(' ')[1] : logoFileNameWithExtension; // Correctly handle filenames with spaces if any
+  
+    logoFileName = logoFileName.replace(/[\s-]/g, '').toLowerCase();
+
+    const email = firstNames[firstNameIndex].toLowerCase() + "." + lastNames[lastNameIndex].toLowerCase() + "@" + logoFileName; // Assuming .com domain for simplicity
+  
+    // Return the generated email
+    return email;
 }
 
-  
-  function generateEmailFromDate(dateString) {
-      const seed = generateSeed(dateString); 
-    
-      const firstNameIndex = Math.floor(pseudoRandom(seed) * firstNames.length);
-      const lastNameIndex = Math.floor(pseudoRandom(seed + 1) * lastNames.length);
-    
-      // Generate logoIndex for logoFileName
-      const logoSeed = seed + 10; // Use a different base seed for variety, similar to updateLogoPicture
-      const logoIndex = Math.floor(pseudoRandom(logoSeed) * newLogoFilenames.length);
-      const fullLogoFileName = newLogoFilenames[logoIndex];
-      
-      // Extract the logoFileName without extension and remove spaces or hyphens
-      const logoFileNameWithExtension = fullLogoFileName.split('.').slice(0, -1).join('.'); // Remove the extension more reliably
-      let logoFileName = logoFileNameWithExtension.includes(' ') ? logoFileNameWithExtension.split(' ')[1] : logoFileNameWithExtension; // Correctly handle filenames with spaces if any
-    
-      // Remove spaces or hyphens and convert to lowercase for email compatibility
-      logoFileName = logoFileName.replace(/[\s-]/g, '').toLowerCase();
-  
-      // Combine the selected first and last names into an email format, now including logoFileName
-      const email = firstNames[firstNameIndex].toLowerCase() + "." + lastNames[lastNameIndex].toLowerCase() + "@not" + logoFileName + ".com"; // Assuming .com domain for simplicity
-    
-      // Return the generated email
-      return email;
-  }
-  
-  
-  function updateProfileEmail(dateString) {
-    const emailElements = document.querySelectorAll('.profileEmail'); // Select all elements with class 'profileEmail'
-    const generatedEmail = generateEmailFromDate(dateString);
-    emailElements.forEach(element => {
-        element.textContent = generatedEmail; // Update the content of each element with the generated email
+
+function updateProfileEmail(dateString) {
+  const emailElements = document.querySelectorAll('.profileEmail'); // Select all elements with class 'profileEmail'
+  const generatedEmail = generateEmailFromDate(dateString);
+  emailElements.forEach(element => {
+      element.textContent = generatedEmail; // Update the content of each element with the generated email
+  });
+}
+
+function generateCompanyNameFromDate(dateString) {
+    const seed = generateSeed(dateString); // Reuse the existing generateSeed function for a consistent seed
+
+    // Generate companyIndex for companyName using the same speed as the email function
+    const companySeed = seed + 10; // Align seed adjustment with the email function for consistency
+    const companyIndex = Math.floor(pseudoRandom(companySeed) * newLogoFilenames.length);
+    const fullLogoFileName = newLogoFilenames[companyIndex];
+
+    // Extract the logoFileName without the extension and remove any leading numbers
+    const logoFileNameWithoutExtensionAndNumbers = fullLogoFileName.split('.').slice(0, -1).join('.')
+        .replace(/^\d+/, ''); // This regex removes leading digits
+
+    // Replace hyphens with spaces
+    const logoFileNameWithSpaces = logoFileNameWithoutExtensionAndNumbers.replace(/-/g, ' ');
+
+    // Capitalize the first letter of each word
+    const companyName = logoFileNameWithSpaces.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+
+    // Return the formatted company name
+    return companyName;
+}
+
+function updateProductNames(dateString) {
+    const seed = generateSeed(dateString);
+    const productNameIndex = Math.floor(pseudoRandom(seed) * productNames.length);
+    const selectedProductName = productNames[productNameIndex];
+
+    const productNameDivs = document.querySelectorAll('.productNames'); // Use querySelectorAll to select all elements
+    productNameDivs.forEach(div => {
+        div.textContent = selectedProductName; // Update each element with the selected product name
     });
 }
-  
-    function generateCompanyNameFromDate(dateString) {
-      const seed = generateSeed(dateString); // Reuse the existing generateSeed function for a consistent seed
-  
-      // Generate companyIndex for companyName using the same speed as the email function
-      const companySeed = seed + 10; // Align seed adjustment with the email function for consistency
-      const companyIndex = Math.floor(pseudoRandom(companySeed) * newLogoFilenames.length);
-      const fullLogoFileName = newLogoFilenames[companyIndex];
-  
-      // Extract the logoFileName without the extension and remove any leading numbers
-      const logoFileNameWithoutExtensionAndNumbers = fullLogoFileName.split('.').slice(0, -1).join('.')
-          .replace(/^\d+/, ''); // This regex removes leading digits
-  
-      // Replace hyphens with spaces
-      const logoFileNameWithSpaces = logoFileNameWithoutExtensionAndNumbers.replace(/-/g, ' ');
-  
-      // Capitalize the first letter of each word
-      const companyName = logoFileNameWithSpaces.split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ');
-  
-      // Return the formatted company name
-      return companyName;
+
+function updateProductAreas(dateString) {
+    const seed = generateSeed(dateString);
+    // Ensure productAreas is defined and has at least one entry
+    if (!productAreas || productAreas.length === 0) {
+        console.error('productAreas array is undefined or empty');
+        return;
+    }
+    const productAreaIndex = Math.floor(pseudoRandom(seed) * productAreas.length);
+    const selectedProductArea = productAreas[productAreaIndex]; 
+
+    const productAreaDivs = document.querySelectorAll('.productAreas'); // Use querySelectorAll to get all matching elements
+    productAreaDivs.forEach(div => {
+        div.textContent = selectedProductArea; // Update each div's content
+    });
+}
+
+
+function updateCompanyName(dateString) {
+  const companyNameElements = document.getElementsByClassName('companyName'); // Get all elements with class 'companyName'
+  const generatedCompanyName = generateCompanyNameFromDate(dateString);
+  for (let i = 0; i < companyNameElements.length; i++) { // Iterate over all elements
+      companyNameElements[i].textContent = generatedCompanyName; // Update each element's content
   }
-  
-  
-  function updateCompanyName(dateString) {
-      const companyNameElement = document.getElementById('companyName'); // Assuming there's an element with id 'companyName'
-      const generatedCompanyName = generateCompanyNameFromDate(dateString);
-      companyNameElement.textContent = generatedCompanyName; // Update the content of the company name element
-  }
-  
-  function updateLogoImageSource(fullLogoFileName) {
-    const logoElement = document.getElementById('logoPicture');
-    logoElement.src = `Images/Logos/${fullLogoFileName}`;
-    logoElement.classList.add("black-fill"); // Apply the CSS class
+}
+
+
+function generateBriefTitle(seed) {
+    const titleIndex = Math.floor(pseudoRandom(seed) * briefTitle.length);
+
+    return briefTitle[titleIndex];
+}
+
+function generateBriefIntro(seed) {
+    const introIndex = Math.floor(pseudoRandom(seed) * briefIntro.length);
+    
+    return briefIntro[introIndex];
+}
+
+function generateBriefContext(seed) {
+    const contextIndex = Math.floor(pseudoRandom(seed) * briefContext.length);
+    
+    return briefContext[contextIndex];
+}
+
+function generateBriefAreas(seed) {
+    const areasIndex = Math.floor(pseudoRandom(seed) * briefAreas.length);
+    
+    return briefAreas[areasIndex];
+}
+
+function generateBriefRelations(seed) {
+    const relationsIndex = Math.floor(pseudoRandom(seed) * briefRelations.length);
+    
+    return briefRelations[relationsIndex];
+}
+
+function generateBriefChallenges(seed) {
+    const challengesIndex = Math.floor(pseudoRandom(seed) * briefChallenges.length);
+    
+    return briefChallenges[challengesIndex];
+}
+
+function generateBriefStyles(seed) {
+    const stylesIndex = Math.floor(pseudoRandom(seed) * briefStyles.length);
+    
+    return briefStyles[stylesIndex];
+}
+
+function generateBriefUsages(seed) {
+    const usagesIndex = Math.floor(pseudoRandom(seed) * briefUsages.length);
+    
+    return briefUsages[usagesIndex];
+}
+
+function generateBriefFreedoms(seed) {
+    const freedomsIndex = Math.floor(pseudoRandom(seed) * briefFreedoms.length);
+    
+    return briefFreedoms[freedomsIndex];
+}
+
+function generateBriefAttached(seed) {
+    const attachedIndex = Math.floor(pseudoRandom(seed) * briefAttached.length);
+    
+    return briefAttached[attachedIndex];
+}
+
+function generateBriefDeadline(seed) {
+    const deadlineIndex = Math.floor(pseudoRandom(seed) * briefDeadline.length);
+    
+    return briefDeadline[deadlineIndex];
+}
+
+function generateBriefEnding(seed) {
+    const endingIndex = Math.floor(pseudoRandom(seed) * briefEnding.length);
+    
+    return briefEnding[endingIndex];
+}
+
+function generateBriefForToday(dateString) {
+    const seed = generateSeed(dateString); 
+    const selectedDate = new Date(dateString); 
+
+    function getRandomElement(array) {
+        return array[Math.floor(pseudoRandom(seed) * array.length)];
+    }
+
+    const briefTitleText = generateBriefTitle(seed); 
+    document.getElementById('briefTitle').textContent = briefTitleText; 
+
+    const briefIntroText = generateBriefIntro(seed); 
+    document.getElementById('briefIntro').textContent = briefIntroText; 
+
+    const briefContextText = generateBriefContext(seed); 
+    document.getElementById('briefContext').textContent = briefContextText; 
+
+    const briefAreasText = generateBriefAreas(seed); 
+    document.getElementById('briefAreas').textContent = briefAreasText; 
+
+    const briefRelationsText = generateBriefRelations(seed); 
+    document.getElementById('briefRelations').textContent = briefRelationsText; 
+
+    const briefChallengesText = generateBriefChallenges(seed); 
+    document.getElementById('briefChallenges').textContent = briefChallengesText; 
+
+    const briefStylesText = generateBriefStyles(seed); 
+    document.getElementById('briefStyles').textContent = briefStylesText; 
+
+    const briefUsagesText = generateBriefUsages(seed); 
+    document.getElementById('briefUsages').textContent = briefUsagesText; 
+
+    const briefFreedomsText = generateBriefFreedoms(seed); 
+    document.getElementById('briefFreedoms').textContent = briefFreedomsText; 
+
+    const briefAttachedText = generateBriefAttached(seed); 
+    document.getElementById('briefAttached').textContent = briefAttachedText; 
+
+    const briefDeadlineText = generateBriefDeadline(seed); 
+    document.getElementById('briefDeadline').textContent = briefDeadlineText; 
+
+    const briefEndingText = generateBriefEnding(seed); 
+    document.getElementById('briefEnding').textContent = briefEndingText; 
+
+    updateProfilePicture(dateString); 
+    updateProfileName(dateString); 
+    updateProfileEmail(dateString); 
+    updateCompanyName(dateString); 
+    updateLogoPicture(dateString); 
+    updateProductNames(dateString);
+    updateProductAreas(dateString);
+    adjustCountdownVisibility(selectedDate);
+}
+
+function copyBriefContent() {
+    // Select the div with the class 'briefContent'
+    var content = document.querySelector('.briefContent').innerHTML;
+
+    // Strip HTML tags
+    var plainText = content.replace(/<[^>]*>?/gm, '');
+
+    // Normalize spaces - replace multiple spaces with a single space and trim
+    plainText = plainText.replace(/\s\s+/g, ' ').trim();
+
+    // Use the Clipboard API to copy the text to the clipboard
+    navigator.clipboard.writeText(plainText).then(function() {
+    }).catch(function(err) {
+        console.error('Unable to copy', err);
+    });
 }
