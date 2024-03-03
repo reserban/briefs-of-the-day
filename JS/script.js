@@ -82,7 +82,8 @@ function updateDownloadButton(dateString) {
 
         // Generate PDF for the profile and brief content
         const doc = new jsPDF();
-        const profileContent = document.querySelector('.profileContainer').innerText; // Simplified example, adjust as needed
+        let profileContent = document.querySelector('.profileContainer').innerText;
+        profileContent = profileContent.replace(/\s+/g, ' ').trim();
 
         // Calculate text width to fit within page margins
         const pageWidth = doc.internal.pageSize.getWidth() - 20; // 20mm total margin (10mm left + 10mm right)
