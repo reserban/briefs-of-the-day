@@ -91,19 +91,17 @@ function updateDownloadButton(dateString) {
 
         doc.text(wrappedText, 10, 10); // Adjust positioning accordingly
 
-    // Add a rectangle with text at the end
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const rectangleHeight = 20; // Height of the rectangle
-    const yPosition = pageHeight - rectangleHeight - 10; // Position the rectangle 10mm from the bottom of the page
-    doc.setFillColor(0, 0, 0); // Black background
-    doc.rect(10, yPosition, pageWidth, rectangleHeight, 'F'); // Draw rectangle
-    doc.setTextColor(255, 255, 255); // White text
-    const text = "With <3 from Design Crony";
-    const textWidth = doc.getTextWidth(text);
-    // Center the text within the rectangle
-    doc.text(text, (doc.internal.pageSize.getWidth() / 2) - (textWidth / 2), yPosition + 14);
+        const rectangleHeight = 10; // Smaller height for the rectangle
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const yPosition = pageHeight - rectangleHeight - 10; // Adjust if needed to position correctly on the page
+        doc.setFillColor(0, 0, 0); // Black background
+        doc.rect(10, yPosition, pageWidth, rectangleHeight, 'F'); // Draw smaller rectangle
+        doc.setTextColor(255, 255, 255); // White text
+        const text = "With <3 from Design Crony";
+        const textWidth = doc.getTextWidth(text);
+        // Center the text horizontally and vertically within the rectangle
+        doc.text(text, (doc.internal.pageSize.getWidth() / 2) - (textWidth / 2), yPosition + (rectangleHeight / 2) + 2.5);
 
-        
         // Add the PDF to the ZIP
         const pdfBlob = doc.output("blob");
         zip.file("profile_content.pdf", pdfBlob);
