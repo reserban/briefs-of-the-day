@@ -69,6 +69,7 @@ function copyBriefContent() {
     });
 }
 
+
 function updateDownloadButton(dateString) {
     const logoElement = document.getElementById('logoPicture');
     const downloadButton = document.getElementById('downloadLogoBtn');
@@ -81,8 +82,13 @@ function updateDownloadButton(dateString) {
 
         // Generate PDF for the profile and brief content
         const doc = new jsPDF();
-        const profileContent = document.querySelector('.profileContainer').innerText; // Simplified example, adjust as needed
-        doc.text(profileContent, 10, 10); // Add more content as needed, adjust positioning accordingly
+        
+        // Use the new method to select and prepare the text for PDF
+        var content = document.querySelector('.briefContent').innerHTML; // Select the content
+        var plainText = content.replace(/<[^>]*>?/gm, ''); // Strip HTML tags
+        plainText = plainText.replace(/\s\s+/g, ' ').trim(); // Normalize spaces
+        
+        doc.text(plainText, 10, 10); // Add the prepared text to the PDF
         
         // Add the PDF to the ZIP
         const pdfBlob = doc.output("blob");
@@ -119,6 +125,7 @@ function updateDownloadButton(dateString) {
         });
     };
 }
+
 
 
 function adjustCountdownVisibility(selectedDate) {
