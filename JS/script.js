@@ -82,13 +82,11 @@ function updateDownloadButton(dateString) {
 
         // Generate PDF for the profile and brief content
         const doc = new jsPDF();
-        
-        // Use the new method to select and prepare the text for PDF
-        var content = document.querySelector('.briefContent').innerHTML; // Select the content
-        var plainText = content.replace(/<[^>]*>?/gm, ''); // Strip HTML tags
-        plainText = plainText.replace(/\s\s+/g, ' ').trim(); // Normalize spaces
-        
-        doc.text(plainText, 10, 10); // Add the prepared text to the PDF
+        let profileContent = document.querySelector('.profileContainer').innerText; // Adjust selector as needed
+
+        // Split text into lines
+        const lines = doc.splitTextToSize(profileContent, 180); // Adjust width as needed
+        doc.text(lines, 10, 10); // Adjust starting position as needed
         
         // Add the PDF to the ZIP
         const pdfBlob = doc.output("blob");
