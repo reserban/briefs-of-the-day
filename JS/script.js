@@ -52,6 +52,63 @@ function initializeThemeSwitcher() {
     });
 }
 
+function copyBriefContent() {
+    // Select the div with the class 'briefContent'
+    var content = document.querySelector('.briefContent').innerHTML;
+
+    // Strip HTML tags
+    var plainText = content.replace(/<[^>]*>?/gm, '');
+
+    // Normalize spaces - replace multiple spaces with a single space and trim
+    plainText = plainText.replace(/\s\s+/g, ' ').trim();
+
+    // Use the Clipboard API to copy the text to the clipboard
+    navigator.clipboard.writeText(plainText).then(function() {
+    }).catch(function(err) {
+        console.error('Unable to copy', err);
+    });
+}
+
+function updateDownloadButton(dateString) {
+    const logoElement = document.getElementById('logoPicture');
+    const downloadButton = document.getElementById('downloadLogoBtn');
+    const logoSrc = logoElement.getAttribute('src');
+    const fileName = logoSrc.startsWith('data:image/svg+xml') ? 'logo.svg' : logoSrc.split('/').pop();
+
+    downloadButton.onclick = async function() {
+        const zip = new JSZip();
+
+        if (logoSrc.startsWith('data:image/svg+xml')) {
+            const svgData = atob(logoSrc.split(',')[1]);
+            zip.file(fileName, svgData, {binary: true});
+        } else {
+            // Fetching external URL may fail due to CORS
+            try {
+                const response = await fetch(logoSrc);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const blob = await response.blob();
+                zip.file(fileName, blob);
+            } catch (error) {
+                console.error('Failed to fetch the logo for zipping:', error);
+                alert('Failed to download the logo. Please check the console for more details.');
+                return;
+            }
+        }
+
+        zip.generateAsync({type: "blob"}).then(function(content) {
+            const url = URL.createObjectURL(content);
+            const tempLink = document.createElement('a');
+            tempLink.href = url;
+            tempLink.setAttribute('download', `logo_${dateString}.zip`);
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            URL.revokeObjectURL(url);
+        });
+    };
+}
+
+
 function adjustCountdownVisibility(selectedDate) {
     const today = new Date();
     today.setHours(0, 0, 0, 0); 
@@ -95,17 +152,18 @@ function getLogoIndexFromDate(dateString) {
     return Math.floor(pseudoRandom(seed) * newLogoFilenames.length);
 }
 
-function updateLogoImageSource(fullLogoFileName) {
-    const logoElement = document.getElementById('logoPicture');
-    logoElement.src = `Images/Logos/${fullLogoFileName}`;
-    logoElement.classList.add("black-fill");
-}
-
 function updateLogoPicture(dateString) {
     const logoIndex = getLogoIndexFromDate(dateString);
     const fullLogoFileName = newLogoFilenames[logoIndex];
 
     updateLogoImageSource(fullLogoFileName);
+}
+
+
+function updateLogoImageSource(fullLogoFileName) {
+    const logoElement = document.getElementById('logoPicture');
+    logoElement.src = `Images/Logos/${fullLogoFileName}`;
+    logoElement.classList.add("black-fill");
 }
 
 function generateNameFromDate(dateString) {
@@ -342,22 +400,6 @@ function generateBriefForToday(dateString) {
     updateLogoPicture(dateString); 
     updateProductNames(dateString);
     updateProductAreas(dateString);
+    updateDownloadButton(dateString);
     adjustCountdownVisibility(selectedDate);
-}
-
-function copyBriefContent() {
-    // Select the div with the class 'briefContent'
-    var content = document.querySelector('.briefContent').innerHTML;
-
-    // Strip HTML tags
-    var plainText = content.replace(/<[^>]*>?/gm, '');
-
-    // Normalize spaces - replace multiple spaces with a single space and trim
-    plainText = plainText.replace(/\s\s+/g, ' ').trim();
-
-    // Use the Clipboard API to copy the text to the clipboard
-    navigator.clipboard.writeText(plainText).then(function() {
-    }).catch(function(err) {
-        console.error('Unable to copy', err);
-    });
 }
