@@ -82,11 +82,13 @@ function updateDownloadButton(dateString) {
 
         // Generate PDF for the profile and brief content
         const doc = new jsPDF();
-        let profileContent = document.querySelector('.profileContainer').innerText; // Adjust selector as needed
+        const profileContent = document.querySelector('.profileContainer').innerText; // Simplified example, adjust as needed
 
-        // Split text into lines
-        const lines = doc.splitTextToSize(profileContent, 180); // Adjust width as needed
-        doc.text(lines, 10, 10); // Adjust starting position as needed
+        // Calculate text width to fit within page margins
+        const pageWidth = doc.internal.pageSize.getWidth() - 20; // 20mm total margin (10mm left + 10mm right)
+        const wrappedText = doc.splitTextToSize(profileContent, pageWidth); // Wrap text to fit within specified width
+
+        doc.text(wrappedText, 10, 10); // Adjust positioning accordingly
         
         // Add the PDF to the ZIP
         const pdfBlob = doc.output("blob");
@@ -123,7 +125,6 @@ function updateDownloadButton(dateString) {
         });
     };
 }
-
 
 
 function adjustCountdownVisibility(selectedDate) {
