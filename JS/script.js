@@ -77,7 +77,18 @@ function updateDownloadButton(dateString) {
 
     downloadButton.onclick = async function() {
         const zip = new JSZip();
+        const jsPDF = window.jspdf.jsPDF;
 
+        // Generate PDF for the profile and brief content
+        const doc = new jsPDF();
+        const profileContent = document.querySelector('.profileContainer').innerText; // Simplified example, adjust as needed
+        doc.text(profileContent, 10, 10); // Add more content as needed, adjust positioning accordingly
+        
+        // Add the PDF to the ZIP
+        const pdfBlob = doc.output("blob");
+        zip.file("profile_content.pdf", pdfBlob);
+
+        // Handle logo image as before
         if (logoSrc.startsWith('data:image/svg+xml')) {
             const svgData = atob(logoSrc.split(',')[1]);
             zip.file(fileName, svgData, {binary: true});
@@ -95,11 +106,12 @@ function updateDownloadButton(dateString) {
             }
         }
 
+        // Generate the ZIP file and trigger download
         zip.generateAsync({type: "blob"}).then(function(content) {
             const url = URL.createObjectURL(content);
             const tempLink = document.createElement('a');
             tempLink.href = url;
-            tempLink.setAttribute('download', `logo_${dateString}.zip`);
+            tempLink.setAttribute('download', `assets_${dateString}.zip`);
             document.body.appendChild(tempLink);
             tempLink.click();
             document.body.removeChild(tempLink);
