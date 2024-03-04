@@ -52,29 +52,14 @@ function initializeThemeSwitcher() {
     });
 }
 
-function copyBriefContent() {
-    // Select the div with the class 'briefContent'
-    var content = document.querySelector('.briefContent').innerHTML;
-
-    // Strip HTML tags
-    var plainText = content.replace(/<[^>]*>?/gm, '');
-
-    // Normalize spaces - replace multiple spaces with a single space and trim
-    plainText = plainText.replace(/\s\s+/g, ' ').trim();
-
-    // Use the Clipboard API to copy the text to the clipboard
-    navigator.clipboard.writeText(plainText).then(function() {
-    }).catch(function(err) {
-        console.error('Unable to copy', err);
-    });
-}
-
-
 function updateDownloadButton(dateString) {
     const logoElement = document.getElementById('logoPicture');
     const downloadButton = document.getElementById('downloadLogoBtn');
     const logoSrc = logoElement.getAttribute('src');
-    const fileName = logoSrc.startsWith('data:image/svg+xml') ? 'logo.svg' : logoSrc.split('/').pop();
+    const isSvg = logoSrc.startsWith('data:image/svg+xml');
+    const originalFileName = logoSrc.split('/').pop();
+    const originalExtension = originalFileName.includes('.') ? originalFileName.split('.').pop() : 'png'; // Default to 'png' if no extension found
+    const fileName = `logo.${isSvg ? 'svg' : originalExtension}`; // Rename the logo file
 
     downloadButton.onclick = async function() {
         const zip = new JSZip();
@@ -85,26 +70,40 @@ function updateDownloadButton(dateString) {
         let profileContent = document.querySelector('.profileContainer').innerText;
         profileContent = profileContent.replace(/\s+/g, ' ').trim();
 
-        // Calculate text width to fit within page margins
         const pageWidth = doc.internal.pageSize.getWidth() - 20; // 20mm total margin (10mm left + 10mm right)
-        const wrappedText = doc.splitTextToSize(profileContent, pageWidth); // Wrap text to fit within specified width
+        const wrappedText = doc.splitTextToSize(profileContent, pageWidth);
 
-        doc.text(wrappedText, 10, 10); // Adjust positioning accordingly
+        let finalYPosition = 10; // Initial Y position for text
+        doc.text(wrappedText, 10, finalYPosition);
 
-        const rectangleHeight = 10; // Smaller height for the rectangle
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const yPosition = pageHeight - rectangleHeight - 10; // Adjust if needed to position correctly on the page
-        doc.setFillColor(0, 0, 0); // Black background
-        doc.rect(10, yPosition, pageWidth, rectangleHeight, 'F'); // Draw smaller rectangle
+        // Assuming each line of text is roughly 5mm apart, calculate the ending Y position of the content
+        finalYPosition += wrappedText.length * 5;
+
+        // Adjustments for rectangle positioning and margins
+        const rectangleHeight = 10; // Height of the rectangle
+        const bottomMargin = 5; // Reduced bottom margin
+        const topMargin = 20; // Increased top margin for the rectangle
+
+        // Adjust rectangleYPosition to account for the new topMargin
+        let rectangleYPosition = finalYPosition + topMargin; // Adjust space between content and rectangle
+
+        // Check if content overflows, considering the new bottomMargin
+        if (rectangleYPosition + rectangleHeight + bottomMargin > doc.internal.pageSize.getHeight()) {
+            doc.addPage();
+            rectangleYPosition = 10; // Reset position for the new page
+        }
+
+        doc.setFillColor(0, 0, 0); // Black background for the rectangle
+        doc.rect(10, rectangleYPosition, pageWidth, rectangleHeight, 'F');
+
         doc.setTextColor(255, 255, 255); // White text
         const text = "With <3 from Design Crony";
         const textWidth = doc.getTextWidth(text);
-        // Center the text horizontally and vertically within the rectangle
-        doc.text(text, (doc.internal.pageSize.getWidth() / 2) - (textWidth / 2), yPosition + (rectangleHeight / 2) + 2.5);
+        doc.text(text, (doc.internal.pageSize.getWidth() / 2) - (textWidth / 2), rectangleYPosition + (rectangleHeight / 2) + 2.5);
 
         // Add the PDF to the ZIP
         const pdfBlob = doc.output("blob");
-        zip.file("profile_content.pdf", pdfBlob);
+        zip.file("brief.pdf", pdfBlob);
 
         // Handle logo image as before
         if (logoSrc.startsWith('data:image/svg+xml')) {
@@ -129,7 +128,7 @@ function updateDownloadButton(dateString) {
             const url = URL.createObjectURL(content);
             const tempLink = document.createElement('a');
             tempLink.href = url;
-            tempLink.setAttribute('download', `assets_${dateString}.zip`);
+            tempLink.setAttribute('download', `Assets.zip`);
             document.body.appendChild(tempLink);
             tempLink.click();
             document.body.removeChild(tempLink);
@@ -137,7 +136,6 @@ function updateDownloadButton(dateString) {
         });
     };
 }
-
 
 function adjustCountdownVisibility(selectedDate) {
     const today = new Date();
@@ -349,12 +347,6 @@ function generateBriefStyles(seed) {
     return briefStyles[stylesIndex];
 }
 
-function generateBriefUsages(seed) {
-    const usagesIndex = Math.floor(pseudoRandom(seed) * briefUsages.length);
-    
-    return briefUsages[usagesIndex];
-}
-
 function generateBriefFreedoms(seed) {
     const freedomsIndex = Math.floor(pseudoRandom(seed) * briefFreedoms.length);
     
@@ -407,9 +399,6 @@ function generateBriefForToday(dateString) {
 
     const briefStylesText = generateBriefStyles(seed); 
     document.getElementById('briefStyles').textContent = briefStylesText; 
-
-    const briefUsagesText = generateBriefUsages(seed); 
-    document.getElementById('briefUsages').textContent = briefUsagesText; 
 
     const briefFreedomsText = generateBriefFreedoms(seed); 
     document.getElementById('briefFreedoms').textContent = briefFreedomsText; 

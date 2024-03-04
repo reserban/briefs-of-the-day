@@ -103,7 +103,6 @@ body {
   font-family: 'Lexend', sans-serif;
   font-size: 1em;
   display: inline-block; 
-  margin-right: 0.800em;
 }
 
 .shareButton:hover {
@@ -125,7 +124,6 @@ a {
 }
 
 .buttonContainer {
-  display: flex; 
   margin-bottom: 0.4em;
 }
 
