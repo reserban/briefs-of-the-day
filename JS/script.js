@@ -12,11 +12,11 @@ function initializeFlatpickr() {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        defaultDate: new Date(), 
-        maxDate: new Date(), 
-        disableMobile: true, 
+        defaultDate: new Date(),
+        maxDate: new Date(),
+        disableMobile: true,
         onChange: function(selectedDates, dateStr, instance) {
-            generateBriefForToday(dateStr); 
+            generateBriefForToday(dateStr);
         }
     });
     document.querySelector("#datePicker").setAttribute("autocomplete", "nope");
@@ -27,7 +27,7 @@ function generateSeed(date) {
     for (var i = 0; i < date.length; i++) {
         var char = date.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; 
+        hash = hash & hash;
     }
     return hash;
 }
@@ -40,10 +40,8 @@ function pseudoRandom(seed) {
 function initializeThemeSwitcher() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.checked = savedTheme === 'dark';
-    
     themeToggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -52,65 +50,168 @@ function initializeThemeSwitcher() {
     });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date();
+    const localDateStr = today.getFullYear() + '-' + (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+    document.getElementById('currentDate').textContent = today.toLocaleDateString();
+    document.getElementById('datePicker').max = localDateStr;
+    document.getElementById('datePicker').value = localDateStr;
+    changeDate(localDateStr);
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.checked = savedTheme === 'dark';
+    themeToggle.addEventListener('click', toggleTheme);
+});
+
+function parseColorValues(colorValues) {
+    var colorValuesArray = colorValues.match(/\b[0-9A-Fa-f]{3}\b|[0-9A-Fa-f]{6}\b/g);
+    if (colorValuesArray) {
+        colorValuesArray = colorValuesArray.map(function(item) {
+            if (item.length === 3) {
+                var newItem = item.toString().split('');
+                newItem = newItem.reduce(function(acc, it) {
+                    return acc + it + it;
+                }, '');
+                return newItem;
+            }
+            return item;
+        });
+    }
+    return colorValuesArray;
+}
+
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+    return str;
+}
+
+function hexToRGB(colorValue) {
+    return {
+        red: parseInt(colorValue.substr(0, 2), 16),
+        green: parseInt(colorValue.substr(2, 2), 16),
+        blue: parseInt(colorValue.substr(4, 2), 16)
+    }
+}
+
+function intToHex(rgbint) {
+    return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
+}
+
+function rgbToHex(rgb) {
+    return intToHex(rgb.red) + intToHex(rgb.green) + intToHex(rgb.blue);
+}
+
+function rgbShade(rgb, i) {
+    return {
+        red: Math.max(0, Math.round(rgb.red * (1 - 0.1 * i))),
+        green: Math.max(0, Math.round(rgb.green * (1 - 0.1 * i))),
+        blue: Math.max(0, Math.round(rgb.blue * (1 - 0.1 * i)))
+    };
+}
+
+function rgbTint(rgb, i) {
+    return {
+        red: Math.min(255, Math.round(rgb.red + (255 - rgb.red) * i * 0.1)),
+        green: Math.min(255, Math.round(rgb.green + (255 - rgb.green) * i * 0.1)),
+        blue: Math.min(255, Math.round(rgb.blue + (255 - rgb.blue) * i * 0.1))
+    };
+}
+
+function calculateShades(colorValue) {
+    const color = hexToRGB(colorValue);
+    const shadeValues = [];
+    for (let i = 1; i <= 10; i++) {
+        shadeValues.push(rgbToHex(rgbShade(color, i)));
+    }
+    return shadeValues;
+}
+
+function calculateTints(colorValue) {
+    const color = hexToRGB(colorValue);
+    const tintValues = [];
+    for (let i = 1; i <= 10; i++) {
+        tintValues.push(rgbToHex(rgbTint(color, i)));
+    }
+    return tintValues;
+}
+
+function extractColorsFromSVG(svgContent) {
+    const colorRegex = /fill=["']?(#[0-9a-fA-F]{3,6}|none|currentColor|rgb\(\d+,\s*\d+,\s*\d+\))["']?/g;
+    let match;
+    const colors = new Set();
+    while ((match = colorRegex.exec(svgContent)) !== null) {
+        if (match[1] !== 'none' && match[1] !== 'currentColor') {
+            colors.add(match[1]);
+        }
+    }
+    return Array.from(colors);
+}
+
 function updateDownloadButton(dateString) {
     const logoElement = document.getElementById('logoPicture');
     const downloadButton = document.getElementById('downloadLogoBtn');
     const logoSrc = logoElement.getAttribute('src');
     const isSvg = logoSrc.startsWith('data:image/svg+xml');
     const originalFileName = logoSrc.split('/').pop();
-    const originalExtension = originalFileName.includes('.') ? originalFileName.split('.').pop() : 'png'; // Default to 'png' if no extension found
-    const fileName = `logo.${isSvg ? 'svg' : originalExtension}`; // Rename the logo file
-
+    const originalExtension = originalFileName.includes('.') ? originalFileName.split('.').pop() : 'png';
+    const fileName = `logo.${isSvg ? 'svg' : originalExtension}`;
     downloadButton.onclick = async function() {
         const zip = new JSZip();
-        const jsPDF = window.jspdf.jsPDF;
-
-        // Generate PDF for the profile and brief content
-        const doc = new jsPDF();
-        let profileContent = document.querySelector('.profileContainer').innerText;
-        profileContent = profileContent.replace(/\s+/g, ' ').trim();
-
-        const pageWidth = doc.internal.pageSize.getWidth() - 20; // 20mm total margin (10mm left + 10mm right)
-        const wrappedText = doc.splitTextToSize(profileContent, pageWidth);
-
-        let finalYPosition = 10; // Initial Y position for text
-        doc.text(wrappedText, 10, finalYPosition);
-
-        // Assuming each line of text is roughly 5mm apart, calculate the ending Y position of the content
-        finalYPosition += wrappedText.length * 5;
-
-        // Adjustments for rectangle positioning and margins
-        const rectangleHeight = 10; // Height of the rectangle
-        const bottomMargin = 5; // Reduced bottom margin
-        const topMargin = 20; // Increased top margin for the rectangle
-
-        // Adjust rectangleYPosition to account for the new topMargin
-        let rectangleYPosition = finalYPosition + topMargin; // Adjust space between content and rectangle
-
-        // Check if content overflows, considering the new bottomMargin
-        if (rectangleYPosition + rectangleHeight + bottomMargin > doc.internal.pageSize.getHeight()) {
-            doc.addPage();
-            rectangleYPosition = 10; // Reset position for the new page
+        let svgContent = '';
+        if (logoSrc.startsWith('data:image/svg+xml')) {
+            const encodedSvg = logoSrc.split(',')[1];
+            svgContent = decodeURIComponent(atob(encodedSvg).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        } else {
+            try {
+                const response = await fetch(logoSrc);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                svgContent = await response.text();
+            } catch (error) {
+                console.error('Failed to fetch SVG:', error);
+                alert('Failed to fetch SVG content. Please check the console for more details.');
+                return;
+            }
         }
-
-        doc.setFillColor(0, 0, 0); // Black background for the rectangle
-        doc.rect(10, rectangleYPosition, pageWidth, rectangleHeight, 'F');
-
-        doc.setTextColor(255, 255, 255); // White text
-        const text = "With <3 from Design Crony";
-        const textWidth = doc.getTextWidth(text);
-        doc.text(text, (doc.internal.pageSize.getWidth() / 2) - (textWidth / 2), rectangleYPosition + (rectangleHeight / 2) + 2.5);
-
-        // Add the PDF to the ZIP
-        const pdfBlob = doc.output("blob");
-        zip.file("brief.pdf", pdfBlob);
-
-        // Handle logo image as before
+        const svgColors = extractColorsFromSVG(svgContent);
+        const svgColorsSVG = createColorsSVG(svgColors);
+        if (isSvg) {
+            zip.file(fileName, svgContent);
+        } else {
+        }
+        const profilePicElement = document.getElementById('profilePicture');
+        const profilePicSrc = profilePicElement.getAttribute('src');
+        const isProfilePicSvg = profilePicSrc.startsWith('data:image/svg+xml');
+        const profilePicFileName = `profile.${isProfilePicSvg ? 'svg' : 'jpg'}`;
+        if (profilePicSrc.startsWith('data:image/svg+xml')) {
+            const svgData = atob(profilePicSrc.split(',')[1]);
+            zip.file(profilePicFileName, svgData, {binary: true});
+        } else {
+            if (profilePicSrc.startsWith('data:')) {
+                const base64Data = profilePicSrc.split(',')[1];
+                zip.file(profilePicFileName, base64Data, {base64: true});
+            } else {
+                try {
+                    const response = await fetch(profilePicSrc);
+                    if (!response.ok) throw new Error('Network response was not ok.');
+                    const blob = await response.blob();
+                    zip.file(profilePicFileName, blob);
+                } catch (error) {
+                    console.error('Failed to fetch the profile picture for zipping:', error);
+                    alert('Failed to download the profile picture. Please check the console for more details.');
+                    return;
+                }
+            }
+        }
         if (logoSrc.startsWith('data:image/svg+xml')) {
             const svgData = atob(logoSrc.split(',')[1]);
             zip.file(fileName, svgData, {binary: true});
         } else {
-            // Fetching external URL may fail due to CORS
             try {
                 const response = await fetch(logoSrc);
                 if (!response.ok) throw new Error('Network response was not ok.');
@@ -122,8 +223,8 @@ function updateDownloadButton(dateString) {
                 return;
             }
         }
-
-        // Generate the ZIP file and trigger download
+        const tintsAndShadesSVG = createTintsAndShadesSVG(svgColors);
+        zip.file('maincolors.svg', tintsAndShadesSVG);
         zip.generateAsync({type: "blob"}).then(function(content) {
             const url = URL.createObjectURL(content);
             const tempLink = document.createElement('a');
@@ -137,12 +238,65 @@ function updateDownloadButton(dateString) {
     };
 }
 
+function createColorsSVG(colors) {
+    const rectHeight = 50;
+    const rectWidth = 100;
+    const fontSize = 12;
+    const svgHeight = colors.length * (rectHeight + 10);
+    const svgWidth = rectWidth;
+    let svgContent = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+    colors.forEach((color, index) => {
+        const yPosition = index * (rectHeight + 5);
+        svgContent += `<rect x="0" y="${yPosition}" width="${rectWidth}" height="${rectHeight}" fill="${color}" />`;
+        svgContent += `<text x="5" y="${yPosition + rectHeight / 2 + fontSize / 2}" fill="white" font-size="${fontSize}" font-family="Lexend">${color}</text>`;
+    });
+    svgContent += `</svg>`;
+    return svgContent;
+}
+
+
+function setTextContrast(color) {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 155 ? '#000000' : '#FFFFFF';
+}
+
+function createTintsAndShadesSVG(colors) {
+    const rectHeight = 20;
+    const rectWidth = 50;
+    const svgWidth = rectWidth * 21;
+    const fontSize = 10;
+    const textYOffset = rectHeight / 2 + fontSize / 3;
+    const svgHeight = colors.length * (rectHeight + 10);
+    let svgContent = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Lexend', sans-serif;">`;
+    colors.forEach((color, index) => {
+        const yPosition = index * (rectHeight + 10);
+        const originalColor = hexToRGB(color.replace('#', ''));
+        const textColor = setTextContrast(color);
+        const originalXPosition = 10 * rectWidth;
+        svgContent += `<rect x="${originalXPosition}" y="${yPosition}" width="${rectWidth}" height="${rectHeight}" fill="${color}" />`;
+        svgContent += `<text x="${originalXPosition + 5}" y="${yPosition + textYOffset}" fill="${textColor}" font-size="${fontSize}">${color}</text>`;
+        for (let i = 1; i <= 10; i++) {
+            const tint = rgbToHex(rgbTint(originalColor, i));
+            svgContent += `<rect x="${originalXPosition - rectWidth * i}" y="${yPosition}" width="${rectWidth}" height="${rectHeight}" fill="#${tint}" />`;
+            svgContent += `<text x="${originalXPosition - rectWidth * i + 5}" y="${yPosition + textYOffset}" fill="black" font-size="${fontSize}">#${tint}</text>`;
+            const shade = rgbToHex(rgbShade(originalColor, i));
+            svgContent += `<rect x="${originalXPosition + rectWidth * i}" y="${yPosition}" width="${rectWidth}" height="${rectHeight}" fill="#${shade}" />`;
+            svgContent += `<text x="${originalXPosition + rectWidth * i + 5}" y="${yPosition + textYOffset}" fill="white" font-size="${fontSize}">#${shade}</text>`;
+        }
+    });
+    svgContent += `</svg>`;
+    return svgContent;
+}
+
 function adjustCountdownVisibility(selectedDate) {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
-    selectedDate.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
     const isToday = today.getTime() === selectedDate.getTime();
-
     const countdownElement = document.getElementById('countdown');
     countdownElement.style.visibility = isToday ? 'visible' : 'hidden';
     countdownElement.style.opacity = isToday ? '1' : '0';
@@ -335,6 +489,12 @@ function generateBriefRelations(seed) {
     return briefRelations[relationsIndex];
 }
 
+function generateBriefInfo(seed) {
+    const infoIndex = Math.floor(pseudoRandom(seed) * briefInfo.length);
+    
+    return briefInfo[infoIndex];
+}
+
 function generateBriefChallenges(seed) {
     const challengesIndex = Math.floor(pseudoRandom(seed) * briefChallenges.length);
     
@@ -393,6 +553,9 @@ function generateBriefForToday(dateString) {
 
     const briefRelationsText = generateBriefRelations(seed); 
     document.getElementById('briefRelations').textContent = briefRelationsText; 
+
+    const briefInfoText = generateBriefInfo(seed); 
+    document.getElementById('briefInfo').textContent = briefInfoText; 
 
     const briefChallengesText = generateBriefChallenges(seed); 
     document.getElementById('briefChallenges').textContent = briefChallengesText; 
