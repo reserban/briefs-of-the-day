@@ -321,12 +321,16 @@ function startCountdown() {
 }
 
 function updateProfilePicture(dateString) {
-    const seed = generateSeed(dateString) + 5; 
+    const seed = generateSeed(dateString) + 5;
     const pictureIndex = Math.floor(pseudoRandom(seed) * 300) + 1;
     const imageFileName = `Images/Persons/${pictureIndex}p.jpg`;
 
     const imgElement = document.getElementById('profilePicture');
-    imgElement.src = imageFileName;
+    const img = new Image();
+    img.onload = function() {
+        imgElement.src = this.src;
+    };
+    img.src = imageFileName;
 }
 
 function getLogoIndexFromDate(dateString) {
