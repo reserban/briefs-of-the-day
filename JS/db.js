@@ -1622,7 +1622,7 @@ const briefStyles = [
   "that adheres to the brand's premium image while innovating in",
   "that establishes a new identity within the brand, focusing on effective",
   "that aligns with the brand's commitment to quality but opens a new chapter in",
-  "that introduces a groundbreaking approach to personal finance management, distinct from traditional banking products.",
+  "that introduces a groundbreaking approach to personal finance management, distinct from traditional",
   "that blends the brand's design style with innovative features in",
   "that retains the brand's core values while introducing a new look in",
   "that ventures into the market with a groundbreaking approach to",
