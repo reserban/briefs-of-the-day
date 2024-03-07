@@ -30,13 +30,14 @@
 
 body {
   font-family: 'Lexend', sans-serif;
-  display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .github-logo {
@@ -134,7 +135,6 @@ a {
 
 .logo {
   text-align: center;
-  margin-top: 9em;
 } 
 
 .logo img {
