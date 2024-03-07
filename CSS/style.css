@@ -141,26 +141,6 @@ a {
   filter: none; 
 }
 
-.loading-animation {
-  display: none;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .switch {
   position: relative;
   display: inline-block;

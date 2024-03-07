@@ -575,32 +575,13 @@ function generateBriefForToday(dateString) {
     const briefEndingText = generateBriefEnding(seed); 
     document.getElementById('briefEnding').textContent = briefEndingText; 
 
-    updateProfilePicture(dateString);
-    updateProfileName(dateString);
-    updateProfileEmail(dateString);
-    updateCompanyName(dateString);
-    updateLogoPicture(dateString);
+    updateProfilePicture(dateString); 
+    updateProfileName(dateString); 
+    updateProfileEmail(dateString); 
+    updateCompanyName(dateString); 
+    updateLogoPicture(dateString); 
     updateProductNames(dateString);
     updateProductAreas(dateString);
     updateDownloadButton(dateString);
     adjustCountdownVisibility(selectedDate);
-  
-    // Hide the loading animation after the content is updated
-    const loadingAnimation = document.querySelector('.loading-animation');
-    const profileDetails = document.querySelector('.profileDetails');
-    const briefContent = document.querySelector('.briefContent');
-  
-    loadingAnimation.style.display = 'none';
-    profileDetails.style.display = 'block';
-    briefContent.style.display = 'block';
 }
-
-function showLoadingAnimation() {
-    const loadingAnimation = document.querySelector('.loading-animation');
-    const profileDetails = document.querySelector('.profileDetails');
-    const briefContent = document.querySelector('.briefContent');
-  
-    loadingAnimation.style.display = 'block';
-    profileDetails.style.display = 'none';
-    briefContent.style.display = 'none';
-  }
