@@ -254,7 +254,6 @@ function createColorsSVG(colors) {
     return svgContent;
 }
 
-
 function setTextContrast(color) {
     const hex = color.replace('#', '');
     const r = parseInt(hex.substr(0, 2), 16);

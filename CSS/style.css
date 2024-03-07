@@ -72,7 +72,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 35rem;
+  max-width: 40rem;
 }
 
 .copyButton {
@@ -134,7 +134,7 @@ a {
 
 .logo {
   text-align: center;
-  margin-top: 7em;
+  margin-top: 12em;
 } 
 
 .logo img {
@@ -339,8 +339,9 @@ body {
 
 #logoPicture {
   margin-left: 0.625em;
-  max-width: 8.25em;
   max-height: 2.4em;
+  max-width: 4.80em;
+  display:initial;  
 }
 
 .briefContent p {
@@ -377,13 +378,6 @@ body {
   height: 3.25em;
   border-radius: 20%;
   margin-right: 0.625em;
-}
-
-#logoPicture {
-  margin-left: 0em;
-  max-width: 5.80em;
-  max-height: 3em;
-  display:initial;  
 }
 
 .briefContent p {
