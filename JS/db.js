@@ -1569,7 +1569,6 @@ const briefInfo = [
 "Integrate hand-drawn elements for a touch of artisanal charm. Celebrate craftsmanship and attention to detail",
 "Adopt a vintage or retro style, infusing nostalgic elements with a contemporary twist. Celebrate heritage while staying relevant",
 "Embrace a flat design ethos with solid colors and minimal gradients. Prioritize clarity and simplicity in your approach",
-"Explore a typographic-driven design, showcasing bold, expressive letterforms as the focal point.",
 "Adopt a sleek color scheme for a sophisticated, high-end aesthetic. Convey luxury and elegance",
 "Embrace asymmetry and unconventional layouts to challenge traditional design norms. Showcase your creative daring",
 "Draw inspiration from the local culture or environment, infusing the design with a sense of place and authenticity",
@@ -1582,7 +1581,7 @@ const briefInfo = [
 "Adopt a bold, graphic style with striking geometric shapes. Showcase your confident, contemporary approach",
 "Embrace a playful aesthetic. Evoke a sense of joy and imagination",
 "Adopt a sleek, futuristic style with clean lines. Convey innovation and cutting-edge technology",
-"Incorporate intricate elements to celebrate cultural richness and attention to detail.",
+"Incorporate intricate elements to celebrate cultural richness and attention to detail",
 ];
 
 const briefChallenges = [
@@ -1807,5 +1806,3 @@ const briefEnding = [
   "Thank you",
   "Have a nice day",
 ];
-
-
