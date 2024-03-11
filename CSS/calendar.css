@@ -12,6 +12,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
+
+  .form-control:hover{
+    background-color: var(--button-hover-bg-color);
+  }
   
 
 .flatpickr-calendar {

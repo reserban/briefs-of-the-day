@@ -234,10 +234,22 @@ function updateDownloadButton(dateString) {
             tempLink.click();
             document.body.removeChild(tempLink);
             URL.revokeObjectURL(url);
+
+            // Show the alert and overlay
+            const alertBox = document.getElementById('shareAlert');
+            const modalOverlay = document.getElementById('modalOverlay');
+            alertBox.style.color = '#FFFFFF'; // Set text color to white for contrast
+            alertBox.innerHTML = '<b>Downloaded!</b>'; // Set the alert message
+            alertBox.style.display = 'block';
+            modalOverlay.style.display = 'flex'; // Show the overlay
+
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+                modalOverlay.style.display = 'none'; // Hide the overlay
+            }, 600);
         });
     };
 }
-
 function createColorsSVG(colors) {
     const rectHeight = 50;
     const rectWidth = 100;
