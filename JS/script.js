@@ -238,7 +238,7 @@ function updateDownloadButton(dateString) {
             // Show the alert and overlay
             const alertBox = document.getElementById('shareAlert');
             const modalOverlay = document.getElementById('modalOverlay');
-            alertBox.style.color = '#FFFFFF'; // Set text color to white for contrast
+            alertBox.style.color = 'var(--text-color)'; // Set text color to white for contrast
             alertBox.innerHTML = '<b>Downloaded!</b>'; // Set the alert message
             alertBox.style.display = 'block';
             modalOverlay.style.display = 'flex'; // Show the overlay
